@@ -226,7 +226,7 @@ class ReflectionRemovalModel(BaseModel):
                 T_r = torch.pow(self.Ts[i], 2.2)
                 R_r = torch.pow(self.Rs[i], 2.2)
                 self.loss_idt_T += self.criterionIdt(self.Ts[i], self.real_T) * np.power(0.85, iter_num - i)
-                self.loss_ssim += self.ssimloss(self.Ts[i], self.real_T) * np.power(0.85, iter_num - i)
+                #self.loss_ssim += self.ssimloss(self.Ts[i], self.real_T) * np.power(0.85, iter_num - i)
                 if not self.isNatural:
                     self.loss_res += self.criterionIdt(real_I_r, (T_r + R_r))\
                                         * np.power(0.85, iter_num - i) * 10
@@ -238,7 +238,7 @@ class ReflectionRemovalModel(BaseModel):
 #        self.loss_G = self.criterionGAN(self.netD(T_final), True) * 0.01  # L_adv: adversarial loss
         self.loss_T = 4*self.loss_idt_T + 1*self.loss_res + self.loss_MP #+ self.loss_G
 #        self.loss_ssim = self.ssimloss(self.Ts[-1],self.real_T);
-        self.loss_total =  self.loss_T + 0.4*self.loss_ssim
+        self.loss_total =  self.loss_T# + 0.4*self.loss_ssim
         
 #        loss_discrepancyT = self.criterionL2(T_final_r, real_T_r)#+self.criterionL2(S_T_final_r, real_T_r)
 #        loss_discrepancyI = self.criterionL2(I_fake_r, I_real_r)#+self.criterionL2(S_I_fake_r, I_real_r)
@@ -258,7 +258,7 @@ class ReflectionRemovalModel(BaseModel):
 #        self.V_R_final = V_R_final.data
 #        self.V_T_edge_final = V_T_edge_final.data
         
-        self.loss_ssim = self.loss_ssim.item()
+        #self.loss_ssim = self.loss_ssim.item()
         self.loss_MP = self.loss_MP.item()
 #        self.loss_T_edge = loss_T_edge.item()
 #        self.loss_discrepancyT = loss_discrepancyT.item()
@@ -282,8 +282,7 @@ class ReflectionRemovalModel(BaseModel):
     def get_current_errors(self):
         ret_errors = OrderedDict([('loss_total', self.loss_total),
                                   ('loss_T',self.loss_T),
-                                  ('loss_MP', self.loss_MP),
-                                  ('loss_SSIM', self.loss_ssim)])
+                                  ('loss_MP', self.loss_MP)])
         return ret_errors
 
     def get_current_visuals_train(self):
